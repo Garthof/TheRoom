@@ -1,21 +1,36 @@
-let story = <HTMLTextAreaElement>document.getElementById('story');
-let command = <HTMLInputElement>document.getElementById('command');
+var story: HTMLTextAreaElement;
+var command: HTMLInputElement;
+main();
 
-if (story != null) {
+function setup() {
+    story = <HTMLTextAreaElement>document.getElementById('story');
     story.innerHTML = 'Hello World! :)';
+
+    command = <HTMLInputElement>document.getElementById('command');
+    command.addEventListener('keyup', ({ key }) => {
+        if (key === 'Enter') {
+            onCommandEntered();
+        }
+    });
+    command.value = '';
 }
 
 function appendTextToStory(text: string) {
-    if (story != null) {
-        story.innerHTML = story.innerHTML.concat('\n', text);
-    }
+    story.innerHTML = story.innerHTML.concat('\n', text);
 }
 
-function commandEntered() {
-    console.log('Command Entered');
-    if (story != null && command != null) {
+function onCommandEntered() {
+    const userInput = command.value.trim();
+    console.log('User Input'.concat(' ', userInput));
+
+    if (userInput.length > 0) {
         const commandText = '>'.concat(' ', command.value);
         appendTextToStory(commandText);
-        console.log(commandText);
     }
+
+    command.value = '';
+}
+
+function main() {
+    setup();
 }
