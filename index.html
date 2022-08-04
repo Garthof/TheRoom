@@ -7,5 +7,33 @@
         <title>Text Adventure</title>
         <script src="script.js" defer></script>
     </head>
-    <body></body>
+    <body>
+        <p>
+            <textarea
+                id="story"
+                name="story"
+                rows="15"
+                cols="70"
+                readonly
+            ></textarea>
+        </p>
+        <p>
+            <label for="">&gt;</label>
+            <input
+                id="command"
+                name="command"
+                type="text"
+                size="70"
+                autocomplete="off"
+            />
+            <button
+                id="enter"
+                name="enter"
+                type="button"
+                onclick="commandEntered()"
+            >
+                Enter
+            </button>
+        </p>
+    </body>
 </html>
