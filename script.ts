@@ -15,10 +15,6 @@ function setup() {
     command.value = '';
 }
 
-function appendTextToStory(text: string) {
-    story.innerHTML = story.innerHTML.concat('\n', text);
-}
-
 function onCommandEntered() {
     const userInput = command.value.trim();
     console.log('User Input'.concat(' ', userInput));
@@ -29,6 +25,10 @@ function onCommandEntered() {
     }
 
     command.value = '';
+}
+
+function appendTextToStory(text: string) {
+    story.innerHTML = story.innerHTML.concat('\n', text);
 }
 
 function main() {
