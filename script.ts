@@ -1,12 +1,11 @@
-var story: HTMLTextAreaElement;
-var command: HTMLInputElement;
-main();
+import * as assets from './assets.js';
+import * as engine from './engine.js';
 
-function setup() {
-    story = <HTMLTextAreaElement>document.getElementById('story');
+function setupHTML() {
+    story = document.getElementById('story') as HTMLTextAreaElement;
     story.innerHTML = 'Hello World! :)';
 
-    command = <HTMLInputElement>document.getElementById('command');
+    command = document.getElementById('command') as HTMLInputElement;
     command.addEventListener('keyup', ({ key }) => {
         if (key === 'Enter') {
             onCommandEntered();
@@ -20,17 +19,14 @@ function onCommandEntered() {
     console.log('User Input'.concat(' ', userInput));
 
     if (userInput.length > 0) {
-        const commandText = '>'.concat(' ', command.value);
-        appendTextToStory(commandText);
+        engine.handleUserInput(userInput, assets.game);
     }
 
     command.value = '';
 }
 
-function appendTextToStory(text: string) {
-    story.innerHTML = story.innerHTML.concat('\n', text);
+function main() {
+    setupHTML();
 }
 
-function main() {
-    setup();
-}
+main();
