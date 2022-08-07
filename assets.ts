@@ -9,9 +9,8 @@ export var key: engine.Item = {
     name: 'key',
 };
 
-export var bed: engine.Item & engine.HasInventory = {
+export var bed: engine.Item = {
     name: 'bed',
-    inventory: [key],
 };
 
 export var bedroom: engine.Scenario = {
@@ -22,23 +21,23 @@ export var bedroom: engine.Scenario = {
             { verb: 'look', instrument: ['at', bed] },
             () => {
                 engine.appendTextToStory(
-                    'Your bed. Bedsheets are in complete disarray after a restless night full of nightmares',
+                    'Your bed. Bedsheets are in complete disarray after a restless night full of nightmares.',
                 );
             },
         ],
         [
             { verb: 'look', instrument: ['at', key] },
             () => {
-                engine.appendTextToStory('A simple and inconspicuous key');
+                engine.appendTextToStory('A simple and inconspicuous key.');
             },
         ],
         [
             { verb: 'look', instrument: ['under', bed] },
             () => {
-                const keyIdx = bed.inventory?.indexOf(key);
+                const keyIdx = bedroom.reachableItems.indexOf(key);
                 if (keyIdx != -1) {
                     engine.appendTextToStory(
-                        'Under the bed it is slightly darker but you manage to distinguish among disgusting specks of dust a shiny little object lying on the floor. As your eyes get used to the darkness the object revals itself as a key.',
+                        'Under the bed it is slightly darker but you manage to locate among disgusting specks of dust a shiny little object lying on the floor. As your eyes get used to the darkness the object revals itself as a key.',
                     );
                 } else {
                     engine.appendTextToStory(
@@ -50,16 +49,16 @@ export var bedroom: engine.Scenario = {
         [
             { verb: 'pick', item: key },
             () => {
-                const keyIdx = bed.inventory?.indexOf(key);
+                const keyIdx = bedroom.reachableItems.indexOf(key);
                 if (keyIdx != -1) {
                     engine.appendTextToStory(
                         'You pick the key and store it in your pocket.',
                     );
-                    bed.inventory = bed.inventory?.splice(keyIdx);
+                    bedroom.reachableItems.splice(keyIdx, 1);
                     player.inventory.push(key);
                 } else {
                     engine.appendTextToStory(
-                        'The key is already in your pocket',
+                        'The key is already in your pocket.',
                     );
                 }
             },
