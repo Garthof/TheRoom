@@ -20,9 +20,14 @@ function onCommandEntered() {
 
     if (userInput.length > 0) {
         engine.handleUserInput(userInput, assets.game);
+        scrollStoryToBottom();
     }
 
     command.value = '';
+}
+
+function scrollStoryToBottom() {
+    story.scrollTop = story.scrollHeight - story.clientHeight;
 }
 
 function main() {
