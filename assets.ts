@@ -13,20 +13,29 @@ export const bed: engine.Item = {
     name: 'bed',
 };
 
+export const door: engine.Item = {
+    name: 'door',
+};
+
 export const intro: engine.Scenario = {
     name: 'intro',
-    reachableItems: [],
+    inventory: [],
     onExit: function () {
         engine.appendTextToStory(
-            'After a restless night you wake up suddenly without remembering who or where are you. You sit for a while on your bed trying to recall anything from your past, still trembling and sweaty from what seemed to be unending nightmares. The echo of a voice still resonates in your head as it dims out. A voice telling you, no, begging you, to leave the room.',
+            'After a restless night you wake up suddenly without remembering who or where are you. You sit for a while on your bed trying to recall anything from your past, still trembling and sweaty from what seemed to be unending nightmares. The echo of a voice still resonates in your head as it fades out. A voice telling you, no, begging you, to leave the room.',
         );
     },
     actions: [],
 };
 
-export var bedroom: engine.Scenario = {
+export var bedroom: engine.Scenario & engine.HasInventory = {
     name: 'bedroom',
-    reachableItems: [bed, key],
+    inventory: [bed, door],
+    onEnter: function () {
+        engine.appendTextToStory(
+            'You decide to get up and look around. You are surrounded by for walls. Except for the bed and a closed door, there is nothing remarkable in the room. You carefully think about what your next action will be.',
+        );
+    },
     actions: [
         [
             { verb: 'look', instrument: ['at', bed] },
@@ -43,13 +52,21 @@ export var bedroom: engine.Scenario = {
             },
         ],
         [
+            { verb: 'look', instrument: ['at', door] },
+            () => {
+                engine.appendTextToStory(
+                    'A wooden shut door blocks the way out. You turn the handle, but the door is locked. You try to force it, but it will not budge. If only you had the key!',
+                );
+            },
+        ],
+        [
             { verb: 'look', instrument: ['under', bed] },
             () => {
-                const keyIdx = bedroom.reachableItems.indexOf(key);
-                if (keyIdx != -1) {
+                if (!engine.hasItem(player, key)) {
                     engine.appendTextToStory(
                         'Under the bed it is slightly darker but you manage to locate among disgusting specks of dust a shiny little object lying on the floor. As your eyes get used to the darkness the object revals itself as a key.',
                     );
+                    engine.addItem(bedroom, key);
                 } else {
                     engine.appendTextToStory(
                         'You see nothing but specks of dust under the bed.',
@@ -60,21 +77,41 @@ export var bedroom: engine.Scenario = {
         [
             { verb: 'pick', item: key },
             () => {
-                const keyIdx = bedroom.reachableItems.indexOf(key);
-                if (keyIdx != -1) {
+                if (engine.hasItem(bedroom, key)) {
                     engine.appendTextToStory(
                         'You pick the key and store it in your pocket.',
                     );
-                    bedroom.reachableItems.splice(keyIdx, 1);
-                    player.inventory.push(key);
-                } else {
+                    engine.moveItem(bedroom, player, key);
+                } else if (engine.hasItem(player, key)) {
                     engine.appendTextToStory(
-                        'The key is already in your pocket.',
+                        'The key is already safely stored in your pocket.',
                     );
                 }
             },
         ],
+        [
+            { verb: 'use', item: key, instrument: ['with', door] },
+            () => {
+                engine.appendTextToStory(
+                    'With a trembling hand you place the key in the keyhole and start turning it. The lock mechanism is released. You pick the handle and open the door. You see an uninviting corridor that goes into the darkness. As you prepare yourself to cross the threshold, a faint voice echoes again in your head: "Hurry up!" You think you have become crazy, but have you any other choice? You look back in the room, before steping in the poorly lit corridor. Your adventure is just starting...',
+                );
+                engine.moveToScenario(game, ending);
+            },
+        ],
     ],
+};
+
+export const ending: engine.Scenario = {
+    name: 'ending',
+    inventory: [],
+    onEnter: function () {
+        engine.appendTextToStory(
+            '\n\nThe game is over. Thanks for playing!\n\nAuthor: Julián Lamas-Rodríguez',
+        );
+        command.disabled = true;
+        enter.disabled = true;
+    },
+    actions: [],
 };
 
 export var game: engine.Game = {

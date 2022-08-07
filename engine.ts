@@ -24,13 +24,12 @@ export type Action = {
     instrument?: [Preposition, object];
 };
 
-export type Scenario = {
-    name: string;
-    reachableItems: Item[];
-    onEnter?(): void;
-    onExit?(): void;
-    actions: [Action, () => void][];
-};
+export type Scenario = Item &
+    HasInventory & {
+        onEnter?(): void;
+        onExit?(): void;
+        actions: [Action, () => void][];
+    };
 
 export type Player = Item & HasInventory;
 
@@ -45,7 +44,7 @@ export function handleUserInput(userInput: string, game: Game) {
     appendTextToStory(commandText);
 
     // Process command
-    const reachableItems = game.scenario.reachableItems.concat(
+    const reachableItems = game.scenario.inventory.concat(
         game.player.inventory,
     );
 
@@ -208,4 +207,32 @@ export function moveToScenario(game: Game, scenario: Scenario) {
 
 export function appendTextToStory(text: string) {
     story.innerHTML = story.innerHTML.concat('\n', text);
+}
+
+export function hasItem(obj: HasInventory, item: Item) {
+    return obj.inventory.indexOf(item) != -1;
+}
+
+export function addItem(obj: HasInventory, item: Item) {
+    if (!hasItem(obj, item)) {
+        obj.inventory.push(item);
+        return true;
+    } else {
+        console.log('addItem: Item ', item, ' is in inventory of ', obj);
+        return false;
+    }
+}
+
+export function deleteItem(obj: HasInventory, item: Item) {
+    if (hasItem(obj, item)) {
+        obj.inventory.splice(obj.inventory.indexOf(item), 1);
+        return true;
+    } else {
+        console.log('removeItem: Item ', item, ' is not in inventory of ', obj);
+        return false;
+    }
+}
+
+export function moveItem(src: HasInventory, dst: HasInventory, item: Item) {
+    return deleteItem(src, item) && addItem(dst, item);
 }
