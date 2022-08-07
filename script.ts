@@ -29,6 +29,7 @@ function onCommandEntered() {
     }
 
     command.value = '';
+    command.focus();
 }
 
 function scrollStoryToBottom() {
