@@ -5,12 +5,23 @@ export var player: engine.Player = {
     inventory: [],
 };
 
-export var key: engine.Item = {
+export const key: engine.Item = {
     name: 'key',
 };
 
-export var bed: engine.Item = {
+export const bed: engine.Item = {
     name: 'bed',
+};
+
+export const intro: engine.Scenario = {
+    name: 'intro',
+    reachableItems: [],
+    onExit: function () {
+        engine.appendTextToStory(
+            'After a restless night you wake up suddenly without remembering who or where are you. You sit for a while on your bed trying to recall anything from your past, still trembling and sweaty from what seemed to be unending nightmares. The echo of a voice still resonates in your head as it dims out. A voice telling you, no, begging you, to leave the room.',
+        );
+    },
+    actions: [],
 };
 
 export var bedroom: engine.Scenario = {
@@ -21,7 +32,7 @@ export var bedroom: engine.Scenario = {
             { verb: 'look', instrument: ['at', bed] },
             () => {
                 engine.appendTextToStory(
-                    'Your bed. Bedsheets are in complete disarray after a restless night full of nightmares.',
+                    'A bed. Bedsheets are in complete disarray after a restless night full of nightmares.',
                 );
             },
         ],
@@ -68,5 +79,5 @@ export var bedroom: engine.Scenario = {
 
 export var game: engine.Game = {
     player: player,
-    scenario: bedroom,
+    scenario: intro,
 };

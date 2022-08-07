@@ -3,7 +3,7 @@ import * as engine from './engine.js';
 
 function setupHTML() {
     story = document.getElementById('story') as HTMLTextAreaElement;
-    story.innerHTML = 'Hello World! :)';
+    story.innerHTML = GAME_NAME + ' v' + GAME_VERSION + '\n\n';
 
     command = document.getElementById('command') as HTMLInputElement;
     command.addEventListener('keyup', ({ key }) => {
@@ -17,6 +17,10 @@ function setupHTML() {
     enter.addEventListener('click', (_) => {
         onCommandEntered();
     });
+}
+
+function setupGame() {
+    engine.moveToScenario(assets.game, assets.bedroom);
 }
 
 function onCommandEntered() {
@@ -38,6 +42,7 @@ function scrollStoryToBottom() {
 
 function main() {
     setupHTML();
+    setupGame();
 }
 
 main();

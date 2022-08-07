@@ -25,8 +25,10 @@ export type Action = {
 };
 
 export type Scenario = {
-    name?: string;
+    name: string;
     reachableItems: Item[];
+    onEnter?(): void;
+    onExit?(): void;
     actions: [Action, () => void][];
 };
 
@@ -184,6 +186,19 @@ function parseItem(text: string, items: Item[]): Item | null {
 
 function parsePreposition(text: string): Preposition | null {
     return validPrepositions.indexOf(text) >= 0 ? text : null;
+}
+
+export function moveToScenario(game: Game, scenario: Scenario) {
+    console.log('Leaving scenario: ', game.scenario.name);
+    if (game.scenario.onExit) {
+        game.scenario.onExit();
+    }
+
+    console.log('Entering scenario: ', game.scenario.name);
+    game.scenario = scenario;
+    if (game.scenario.onEnter) {
+        game.scenario.onEnter();
+    }
 }
 
 export function appendTextToStory(text: string) {
