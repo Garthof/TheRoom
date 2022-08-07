@@ -49,7 +49,7 @@ export function handleUserInput(userInput: string, game: Game) {
         game.player.inventory,
     );
 
-    function isValidAction(action: Action | ParseError) {
+    function isValidAction(action: Action | ParseError): action is Action {
         return (action as Action).verb !== undefined;
     }
 
@@ -63,7 +63,7 @@ export function handleUserInput(userInput: string, game: Game) {
         }
         appendTextToStory('I am afraid I cannot do that');
     } else {
-        switch (action as ParseError) {
+        switch (action) {
             case ParseError.INVALID_COMMAND:
                 appendTextToStory('What you say sounds like gibberish to me');
                 break;
@@ -71,11 +71,16 @@ export function handleUserInput(userInput: string, game: Game) {
                 appendTextToStory('I cannot understand what you want me to do');
                 break;
             case ParseError.INVALID_ITEM:
-                appendTextToStory('I am not aware that such a thing exists');
+                appendTextToStory('I am not aware of such a thing');
                 break;
             case ParseError.INVALID_PREPOSITION:
                 appendTextToStory('Are you sure you know how to English?');
                 break;
+            default:
+                // The following lines will not compile if a new ParseError is added and not tackled in switch statement
+                // See https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking
+                const _invalidParseError: never = action;
+                _invalidParseError;
         }
     }
 }
