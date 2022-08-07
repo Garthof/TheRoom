@@ -12,6 +12,11 @@ function setupHTML() {
         }
     });
     command.value = '';
+
+    enter = document.getElementById('enter') as HTMLButtonElement;
+    enter.addEventListener('click', (_) => {
+        onCommandEntered();
+    });
 }
 
 function onCommandEntered() {
